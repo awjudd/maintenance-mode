@@ -38,8 +38,8 @@
 </head>
 <body>
 <header>
-    <h1>{{ $MaintenanceModeMessage }}</h1>
-    <p>{{ Lang::get(Config::get('maintenancemode::language-path', 'maintenancemode::defaults.') . '.last-updated', ['timestamp' => $MaintenanceModeTimestamp->diffForHumans()]) }}</p>
+    <h1>{{ ${Config::get('maintenancemode::inject.prefix').'Message'} }}</h1>
+    <p>{{ Lang::get(Config::get('maintenancemode::language-path', 'maintenancemode::defaults.') . '.last-updated', ['timestamp' => ${Config::get('maintenancemode::inject.prefix').'Timestamp'}->diffForHumans()]) }}</p>
 </header>
 </body>
 </html>

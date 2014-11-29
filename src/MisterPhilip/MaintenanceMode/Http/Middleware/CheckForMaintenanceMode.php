@@ -46,8 +46,8 @@ class CheckForMaintenanceMode implements Middleware
     public function handle($request, Closure $next)
     {
         // Grab our configs
-        $injectGlobally = Config::get('maintenancemode::inject-globally', true);
-        $prefix = Config::get('maintenancemode::inject-prefix', 'MaintenanceMode');
+        $injectGlobally = Config::get('maintenancemode::inject.globally', true);
+        $prefix = Config::get('maintenancemode::inject.prefix', 'MaintenanceMode');
         $lang = Config::get('maintenancemode::language-path', 'maintenancemode::defaults.');
 
         // Setup value array
