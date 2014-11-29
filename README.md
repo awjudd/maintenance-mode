@@ -26,7 +26,7 @@ This package is a drop-in replacement for Laravel 5's maintenance mode. It inclu
 Within `composer.json` add the following line to the end of the `require` section:
 
 ```json
-"misterphilip/maintenance-mode": "dev-master"
+"misterphilip/maintenance-mode": "dev-development"
 ```
 
 Next, run the Composer update command:
