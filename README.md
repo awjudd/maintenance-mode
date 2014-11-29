@@ -139,10 +139,10 @@ We include a simple view that displays the message and the timestamp for your us
 update the `view` configuration value to point to the new view. The following variables are available for 
 you to use:
 
-    - `$MaintenanceModeEnabled` - Check to see if the maintenance mode is enabled
-    - `$MaintenanceModeMessage` - The message that should be displayed to users (either the one passed via 
-    the command call, or the default from the language file)
-    - `$MaintenanceModeTimestamp` - The timestamp from when the application went into maintenance mode
+  - `$MaintenanceModeEnabled` - Check to see if the maintenance mode is enabled
+  - `$MaintenanceModeMessage` - The message that should be displayed to users (either the one passed via 
+  the command call, or the default from the language file)
+  - `$MaintenanceModeTimestamp` - The timestamp from when the application went into maintenance mode
 
 **NOTE**: If you've changed the `inject.prefix` configuration value, you'll need to reflect it in the variable 
 names above. For example, if `inject.prefix = "Foobar"`, your view variables would be `$FoobarEnabled`, 
