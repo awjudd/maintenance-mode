@@ -2,6 +2,7 @@
     "name": "misterphilip/maintenance-mode",
     "description": "An enhanced maintenance mode for Laravel 5",
     "keywords": ["laravel", "maintenance"],
+    "license": "MIT",
     "authors": [
         {
             "name": "Philip Lawrence",
