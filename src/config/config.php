@@ -3,11 +3,18 @@
 return [
 
     /**
-     * The view to show to users when maintenance is currently
+     * The view to show to users when maintenance mode is currently enabled
      *
      * @var string
      */
     'view' => 'maintenancemode::app-down',
+
+    /**
+     * Include CSS styles with the optional notification view
+     *
+     * @var boolean
+     */
+    'notification-styles' => true,
 
     /**
      * Configuration values for injecting variables into the views
