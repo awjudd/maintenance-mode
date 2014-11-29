@@ -16,7 +16,7 @@
                 background-color: #FF130F;
                 color: #fff;
             }
-            .maintenance-mode-alert {
+            .maintenance-mode-alert strong {
                 font-weight: bold;
             }
             .maintenance-mode-alert time {
