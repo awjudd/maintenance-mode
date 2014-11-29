@@ -140,7 +140,7 @@ information is within the configuration file too!
 If you need to override the default configuration values, run the following command:
 
 ```bash
-$ php artisan public:config misterphilip/maintenancemode
+$ php artisan publish:config misterphilip/maintenance-mode
 ```
 
 Now you can edit the values at `config/packages/misterphilip/maintenancemode/config.php`. Additionally, 
