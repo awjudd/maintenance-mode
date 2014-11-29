@@ -1,7 +1,7 @@
 {
     "name": "misterphilip/maintenance-mode",
-    "description": "An enhanced maintenance mode for Laravel 5",
-    "keywords": ["laravel", "maintenance"],
+    "description": "An enhanced drop-in replacement for Laravel 5's maintenance mode",
+    "keywords": ["laravel", "laravel5" ,"l5", "maintenance"],
     "license": "MIT",
     "authors": [
         {
