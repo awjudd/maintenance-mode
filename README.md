@@ -1,7 +1,7 @@
 # Enhanced Laravel 5 Maintenance Mode
 
 This package is a drop-in replacement for Laravel 5's maintenance mode. It includes:
- - Allowing custom maintenance messages to show to users
+ - Allowing custom maintenance messages to be shown to users
  - Including a timestamp of when the application went down
  - Exempting select users via custom exemption classes
  
@@ -35,7 +35,7 @@ Next, run the Composer update command:
 $ composer update
 ```
 
-Then include `'MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider',` to the end of the
+Add `'MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider',` to the end of the
 `$providers` array in your `config/app.php`:
 
 ```php
@@ -68,7 +68,7 @@ with
 
 ## Usage
 
-This package uses the same syntax as the default app down command, except with 1 optional argument:
+This package uses the same syntax as the default `artisan down` command, except with 1 optional argument:
 
 ```bash
 $ php artisan down [message]
@@ -80,8 +80,8 @@ For example,
 $ php artisan down "We're currently upgrading our system! Please check back later."
 ```
 
-Would show users a message of "We're doing some routine maintenance! Be back soon!". If you don't
-pass in a message the default "We're currently working on the site, please try again later" will
+would show users a message of "We're doing some routine maintenance! Be back soon!". If you don't pass in a 
+message, the default "We're currently working on the site, please try again later" will
 display to the users. Of course this default is configurable via a language string.
 
 To bring your application back online, run the normal app up command:
@@ -93,7 +93,7 @@ $ php artisan up
 ## Configuration
 
 This package is a drop-in replacement for the default maintenance mode provided with Laravel 5. This means 
-that you do not have to do any configuration out of the box. However if you'd like to tweak some of the 
+that you do not have to do any configuration out-of-the-box. However, if you'd like to tweak some of the 
 settings, there are a number of configuration values that are available to make this package a better fit 
 for your application. 
 
@@ -117,17 +117,17 @@ information is within the configuration file too!
   - `language-path` (string)
     - The path to the maintenance mode language strings.
     - Defaults to `maintenancemode::defaults`
-  - `exempt-ips` (array of strings)
+  - `exempt-ips` (string array)
     - An array of IP address that will always be exempt from the application down page
     - Defaults to `['127.0.0.1']`
   - `exempt-ips-proxy` (boolean)
     - Use [proxies](http://symfony.com/doc/current/components/http_foundation/trusting_proxies.html) 
     to get the user's IP address
     - Defaults to `false`
-  - `exempt-environments` (array of strings)
+  - `exempt-environments` (string array)
     - An array of enviornment names that will always be exempt from the application down page
     - Defaults to `['local']`
-  - `exemptions` (array of strings)
+  - `exemptions` (string array)
     - A list of the exemption classes to execute. *See [Exemptions](#exemptions)*
     - Defaults to: 
 ```php
@@ -144,13 +144,13 @@ $ php artisan publish:config misterphilip/maintenance-mode
 ```
 
 Now you can edit the values at `config/packages/misterphilip/maintenancemode/config.php`. Additionally, 
-if you need to have environment-specific configurations, you can create a new folder each of the 
+if you need to have environment-specific configurations, you can create a new folder each o the 
 environments (e.g. `config/packages/misterphilip/maintenancemode/[environment]/config.php`).
 
 ## Exemptions
 
-Exemptions allow for select users to continue to use the application as normal based on specific
-set of rules. Each of these rule sets are defined via a class and then executed against.
+Exemptions allow for select users to continue to use the application like normal based on a specific
+set of rules. Each of these rule sets are defined via a class which is then executed against.
 
 ### Default Exemptions
 
@@ -165,7 +165,7 @@ always including your office IP(s) so that your staff doesn't see the maintenanc
 
 Configuration values included with this exemption are:
 
-  - `exempt-ips` - An array of IPs that will not see the maintenance page
+  - `exempt-ips` - An array of IP addresses that will not see the maintenance page
   - `exempt-ips-proxy` - Set to `true` if you have IP proxies setup
 
 ##### Environment Whitelist
@@ -179,13 +179,14 @@ Configuration values included with this exemption are:
  
 ### Creating a new exemption
 
-Setting up a new exemption is simple.
+Setting up a new exemption is simple:
 
   1. Create a new class and extend `MisterPhilip\MaintenanceMode\Exemptions\MaintenanceModeExemption`.
-  Where you place this is up to you, some examples are `app\Exemptions` or `app\Infrastructure\Maintenance`
-  2. This class must include an `isExempt` method. This method should return `true` if the user should
-  *not* see the maintenance page, or `false` if the user does not match your ruleset and should continue
-  checking other exceptions.
+  You might consider creating these files in `app\Exemptions` or `app\Infrastructure\Maintenance`, but 
+  you're free to place them where you want.
+  2. This class must include an `isExempt` method. This method should return `true` if the user should 
+  not see the maintenance page. If this returns `false`, it indicates that the user does not match 
+  your ruleset and other exceptions should be checked.
   3. Add the full class name to the `exemptions` array in the configuration file.
 
 Below is an template to use for a new exemption class `SampleExemption`:
@@ -211,7 +212,7 @@ class SampleExemption extends MaintenanceModeExemption
 
 ## Views
 
-There are 2 views included with this package; an "application down" page that replaces the current "Be 
+There are 2 views included with this package: an "application down" page that replaces the current "Be 
 right back!" page, and a "maintenance notification" which is a notification bar that tells exempted users 
 that the application is in maintenance mode.
 
@@ -220,7 +221,7 @@ that the application is in maintenance mode.
 ![Default maintenance page](examples/screenshots/maintenance-mode-page.png "Default maintenance page")
 *The default maintenance page, `maintenancemode::app-down`*
 
-We include a simple view that displays the message and the timestamp for your users. To change this page, 
+Included is a default view that displays your custom message and a timestamp for your users. To change this page, 
 update the `view` configuration value to point to the new view. The following variables are available for 
 you to use:
 
@@ -229,12 +230,12 @@ you to use:
   the command call, or the default from the language file)
   - `$MaintenanceModeTimestamp` - The timestamp from when the application went into maintenance mode
 
-**NOTE**: If you've changed the `inject.prefix` configuration value, you'll need to reflect it in the variable 
-names above. For example, if `inject.prefix = "Foobar"`, your view variables would be `$FoobarEnabled`, 
+**NOTE**: If you've changed the `inject.prefix` configuration value, you'll need to reflect this change in the 
+variable names above. For example, if `inject.prefix = "Foobar"`, your view variables would be `$FoobarEnabled`, 
 `$FoobarMessage`, and `$FoobarTimestamp`. 
 
-**NOTE**: By default these variables are available in all views. To disable this and have it only inject 
-variables on the maintenance page, change the `inject.global` configuration value to `false`.
+**NOTE**: By default, these variables are available in all views. To disable this functionality and have it 
+only inject variables on the maintenance page, change the `inject.global` configuration value to `false`.
 
 ### Maintenance Notification
 
