@@ -18,8 +18,8 @@ class IPWhitelist extends MaintenanceModeExemption
      */
     public function isExempt()
     {
-        $authorizedIPs = Config::get('maintenancemode::exempt-ips', []);
-        $useProxy = Config::get('maintenancemode::exempt-ips-proxy', false);
+        $authorizedIPs = Config::get('maintenancemode::config.exempt-ips', []);
+        $useProxy = Config::get('maintenancemode::config.exempt-ips-proxy', false);
         $userIP = Request::getClientIp($useProxy);
 
         if(is_array($authorizedIPs) && in_array($userIP, $authorizedIPs))

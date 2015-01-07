@@ -35,7 +35,8 @@ Next, run the Composer update command:
 $ composer update
 ```
 
-Add `'MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider',` to the end of the
+Add `'MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider',` and 
+`'MisterPhilip\MaintenanceMode\MaintenanceCommandServiceProvider',` to the end of the 
 `$providers` array in your `config/app.php`:
 
 ```php
@@ -51,6 +52,7 @@ Add `'MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider',` to the end 
     ...
 
     'MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider',
+    'MisterPhilip\MaintenanceMode\MaintenanceCommandServiceProvider',
 ],
 ```
 

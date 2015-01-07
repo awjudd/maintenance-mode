@@ -1,6 +1,6 @@
 <?php namespace MisterPhilip\MaintenanceMode\Http\Middleware;
 
-use Closure, Config, File, Lang, View, Session;
+use Closure;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Contracts\Routing\Middleware;
@@ -46,15 +46,15 @@ class CheckForMaintenanceMode implements Middleware
     public function handle($request, Closure $next)
     {
         // Grab our configs
-        $injectGlobally = Config::get('maintenancemode::inject.globally', true);
-        $prefix = Config::get('maintenancemode::inject.prefix', 'MaintenanceMode');
-        $lang = Config::get('maintenancemode::language-path', 'maintenancemode::defaults.');
+        $injectGlobally = $this->app['config']->get('maintenancemode::config.inject.globally', true);
+        $prefix = $this->app['config']->get('maintenancemode::config.inject.prefix', 'MaintenanceMode');
+        $lang = $this->app['config']->get('maintenancemode::config.language-path', 'maintenancemode::defaults.');
 
         // Setup value array
         $info = [
             $prefix . 'Enabled' => false,
             $prefix . 'Timestamp' => Carbon::now(),
-            $prefix . 'Message' => Lang::get($lang . '.message'),
+            $prefix . 'Message' => $this->app['translator']->get($lang . '.message'),
         ];
 
         // Are we down?
@@ -63,11 +63,11 @@ class CheckForMaintenanceMode implements Middleware
             // Yes. :(
             $info[$prefix.'Enabled'] = true;
 
-           $path = Config::get('app.manifest').'/down';
-            if(File::exists($path))
+            $path = storage_path().'/framework/down';
+            if($this->app['files']->exists($path))
             {
                 // Grab the stored information
-                $fileContents = File::get($path);
+                $fileContents = $this->app['files']->get($path);
                 if(preg_match('~([0-9]+)\|(.*)~', $fileContents, $matches))
                 {
                     // And put it into our array, if it exists
@@ -81,7 +81,7 @@ class CheckForMaintenanceMode implements Middleware
                 // Inject the information globally
                 foreach($info as $key => $value)
                 {
-                    View::share($key, $value);
+                    $this->app['view']->share($key, $value);
                 }
             }
 
@@ -89,7 +89,7 @@ class CheckForMaintenanceMode implements Middleware
             $isExempt = false;
 
             // Grab all of the exemption classes to create/execute against
-            $exemptions = Config::get('maintenancemode::exemptions', []);
+            $exemptions = $this->app['config']->get('maintenancemode::config.exemptions', []);
             foreach($exemptions as $className)
             {
                 if(class_exists($className))
@@ -107,23 +107,25 @@ class CheckForMaintenanceMode implements Middleware
                     else
                     {
                         // Class doesn't match what we're looking for
-                        throw new InvalidExemption(Lang::get($lang . '.exceptions.invalid', ['class' => $className]));
+                        throw new InvalidExemption($this->app['translator']->get($lang . '.exceptions.invalid', ['class' => $className]));
                     }
                 }
                 else
                 {
                     // Where's Waldo?
-                    throw new ExemptionDoesNotExist(Lang::get($lang . '.exceptions.missing', ['class' => $className]));
+                    throw new ExemptionDoesNotExist($this->app['translator']->get($lang . '.exceptions.missing', ['class' => $className]));
                 }
             }
 
             if(!$isExempt)
             {
                 // Since the session isn't started... it'll throw an error
-                Session::start();
+                $this->app['session']->start();
 
                 // The user isn't exempt, let's show them the maintenance page!
-                $view = Config::get('maintenancemode::view-page', 'maintenancemode::app-down');
+                $view = $this->app['config']->get('maintenancemode::config.view-page', 'maintenancemode::app-down');
+
+                // $view = 'errors.503';
                 return new Response(view($view, $info), 503);
             }
         }
@@ -134,7 +136,7 @@ class CheckForMaintenanceMode implements Middleware
                 // Inject the information globally (to prevent the need of isset)
                 foreach($info as $key => $value)
                 {
-                    View::share($key, $value);
+                    $this->app['view']->share($key, $value);
                 }
             }
         }

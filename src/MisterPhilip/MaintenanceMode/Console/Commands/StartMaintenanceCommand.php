@@ -19,10 +19,10 @@ class StartMaintenanceCommand extends DownCommand {
      */
     public function fire()
     {
-        $path = $this->laravel['config']['app.manifest'].'/down';
+        $path = $this->laravel->storagePath().'/framework/down';
 
         $timestamp = Carbon::now()->timestamp;
-        $message = $this->input->getArgument('message');
+        $message = $this->argument('message');
 
         // Add the file with our information
         File::put($path, $timestamp . '|' . $message);
