@@ -72,7 +72,10 @@ class CheckForMaintenanceMode implements Middleware
                 {
                     // And put it into our array, if it exists
                     $info[$prefix.'Timestamp'] = Carbon::createFromTimeStamp($matches[1]);
-                    $info[$prefix.'Message'] = $matches[2];
+                    if(isset($matches[2]) && $matches[2] != '')
+                    {
+                        $info[$prefix.'Message'] = $matches[2];
+                    }
                 }
             }
 
