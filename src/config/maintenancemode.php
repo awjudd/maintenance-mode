@@ -97,11 +97,11 @@ return [
         /*
          * IPWhitelist exempts users with the IPs matched in the "exempt-ips" config
          */
-        '\MisterPhilip\MaintenanceMode\Exemptions\IPWhitelist',
+        MisterPhilip\MaintenanceMode\Exemptions\IPWhitelist::class,
 
         /*
          * EnvironmentWhitelist exempts installations with environments matched in the "exempt-environments" config
          */
-        '\MisterPhilip\MaintenanceMode\Exemptions\EnvironmentWhitelist',
+        MisterPhilip\MaintenanceMode\Exemptions\EnvironmentWhitelist::class,
     ],
 ];
