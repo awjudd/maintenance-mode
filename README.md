@@ -35,8 +35,8 @@ Next, run the Composer update command:
 $ composer update
 ```
 
-Add `'MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider',` and 
-`'MisterPhilip\MaintenanceMode\MaintenanceCommandServiceProvider',` to the end of the 
+Add `MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider::class,` and 
+`MisterPhilip\MaintenanceMode\MaintenanceCommandServiceProvider::class,` to the end of the 
 `$providers` array in your `config/app.php`:
 
 ```php
@@ -45,27 +45,33 @@ Add `'MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider',` and
     /*
      * Application Service Providers...
      */
-    'App\Providers\AppServiceProvider',
-    'App\Providers\EventServiceProvider',
-    'App\Providers\RouteServiceProvider',
-
-    ...
-
-    'MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider',
-    'MisterPhilip\MaintenanceMode\MaintenanceCommandServiceProvider',
+     App\Providers\AppServiceProvider::class,
+     App\Providers\EventServiceProvider::class,
+     App\Providers\RouteServiceProvider::class,
+        
+     ...
+        
+     MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider::class,
+     MisterPhilip\MaintenanceMode\MaintenanceCommandServiceProvider::class,
 ],
 ```
 
-Finally, in `app/Http/Kernel.php` replace
+Finally, in `app/Http/Kernel.php` replace the current MaintenanceMode Middleware
 
 ```php
 'Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode',
 ```
 
+or
+
+```php
+'\Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class',
+```
+
 with
 
 ```php
-'MisterPhilip\MaintenanceMode\Http\Middleware\CheckForMaintenanceMode',
+\MisterPhilip\MaintenanceMode\Http\Middleware\CheckForMaintenanceMode::class,
 ```
 
 ## Usage
@@ -142,12 +148,10 @@ information is within the configuration file too!
 If you need to override the default configuration values, run the following command:
 
 ```bash
-$ php artisan publish:config misterphilip/maintenance-mode
+$ php artisan vendor:publish --provider="MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider" --tag="config"
 ```
 
-Now you can edit the values at `config/packages/misterphilip/maintenancemode/config.php`. Additionally, 
-if you need to have environment-specific configurations, you can create a new folder each o the 
-environments (e.g. `config/packages/misterphilip/maintenancemode/[environment]/config.php`).
+Now you can edit the values at `config/maintenancemode.php`.
 
 ## Exemptions
 
@@ -217,6 +221,14 @@ class SampleExemption extends MaintenanceModeExemption
 There are 2 views included with this package: an "application down" page that replaces the current "Be 
 right back!" page, and a "maintenance notification" which is a notification bar that tells exempted users 
 that the application is in maintenance mode.
+
+You can also publish these views so that you can edit them easily. The command below will publish the views 
+to `resources/views/vendor/maintenancemode/*`. Once published be sure to change the config values (`view`) 
+to point to the new file location. 
+
+```bash
+$ php artisan vendor:publish --provider="MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider" --tag="views"
+```
 
 ### Application Down
 

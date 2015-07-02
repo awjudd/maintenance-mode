@@ -29,8 +29,8 @@ class UserGroupWhitelist extends MaintenanceModeExemption
          * ];
          */
 
-        $exemptGroups = Config::get('maintenance.exemptions.user-groups', []);
-        $currentUser = Auth::user();
+        $exemptGroups = $this->app['config']->get('maintenancemode.exemptions.user-groups', []);
+        $currentUser = $this->app['auth']->user();
         if(is_array($exemptGroups) && $currentUser !== null)
         {
             // Grab the current user group IDs

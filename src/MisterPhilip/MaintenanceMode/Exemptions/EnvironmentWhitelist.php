@@ -18,7 +18,7 @@ class EnvironmentWhitelist extends MaintenanceModeExemption
      */
     public function isExempt()
     {
-        $ignoreEnvs = Config::get('maintenancemode::config.exempt-environments', []);
+        $ignoreEnvs = $this->app['config']->get('maintenancemode.exempt-environments', []);
 
         if(is_array($ignoreEnvs) && in_array($this->app->environment(), $ignoreEnvs))
         {

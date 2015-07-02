@@ -5,10 +5,10 @@
     @include('maintenancemode::notification')
 --}}
 
-@if(isset(${Config::get('maintenancemode::config.inject.prefix').'Enabled'}) &&
-    ${Config::get('maintenancemode::config.inject.prefix').'Enabled'} == true)
+@if(isset(${Config::get('maintenancemode.inject.prefix').'Enabled'}) &&
+    ${Config::get('maintenancemode.inject.prefix').'Enabled'} == true)
 
-    @if(Config::get('maintenancemode::config.notification-styles', true))
+    @if(Config::get('maintenancemode.notification-styles', true))
         <style>
             .maintenance-mode-alert {
                 width: 100%;
@@ -33,16 +33,16 @@
         <strong>Maintenance Mode</strong>
 
         {{-- Show the truncated message (so it doesn't overflow) --}}
-        @if(isset(${Config::get('maintenancemode::config.inject.prefix').'Message'}))
-            {{ str_limit(${Config::get('maintenancemode::config.inject.prefix').'Message'}, 100, "&hellip;") }}
+        @if(isset(${Config::get('maintenancemode.inject.prefix').'Message'}))
+            {{ str_limit(${Config::get('maintenancemode.inject.prefix').'Message'}, 100, "&hellip;") }}
         @endif
 
         {{-- And show a human-friendly timestamp --}}
-        @if(isset(${Config::get('maintenancemode::config.inject.prefix').'Timestamp'}) &&
-            ${Config::get('maintenancemode::config.inject.prefix').'Timestamp'} instanceof DateTime)
+        @if(isset(${Config::get('maintenancemode.inject.prefix').'Timestamp'}) &&
+            ${Config::get('maintenancemode.inject.prefix').'Timestamp'} instanceof DateTime)
 
-            <time datetime="{{ ${Config::get('maintenancemode::config.inject.prefix').'Timestamp'} }}" title="{{ ${Config::get('maintenancemode::config.inject.prefix').'Timestamp'} }}">
-                {{ ${Config::get('maintenancemode::config.inject.prefix').'Timestamp'}->diffForHumans() }}
+            <time datetime="{{ ${Config::get('maintenancemode.inject.prefix').'Timestamp'} }}" title="{{ ${Config::get('maintenancemode.inject.prefix').'Timestamp'} }}">
+                {{ ${Config::get('maintenancemode.inject.prefix').'Timestamp'}->diffForHumans() }}
             </time>
 
         @endif

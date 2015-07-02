@@ -12,6 +12,8 @@ class MaintenanceModeServiceProvider extends ServiceProvider
 	 */
 	protected $defer = false;
 
+    const BASE_PATH = __DIR__ . '/../../';
+
     /**
      * Bootstrap our application events.
      *
@@ -19,7 +21,10 @@ class MaintenanceModeServiceProvider extends ServiceProvider
      */
 	public function boot()
 	{
-		$this->registerConfig();
+        // Register our resources
+        $this->loadViews();
+        $this->loadTranslations();
+		$this->loadConfig();
 	}
 
 	/**
@@ -29,34 +34,44 @@ class MaintenanceModeServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-
+        $this->mergeConfigFrom(
+            self::BASE_PATH . 'config/maintenancemode.php', 'maintenancemode'
+        );
 	}
+
+    /**
+     * Register our view files
+     *
+     * @return void
+     */
+    protected function loadViews()
+    {
+        $this->loadViewsFrom(self::BASE_PATH . 'views', 'maintenancemode');
+
+        $this->publishes([
+            self::BASE_PATH . 'views' => base_path('resources/views/vendor/maintenancemode'),
+        ], 'views');
+    }
+
+    /**
+     * Register our translations
+     *
+     * @return void
+     */
+    protected function loadTranslations()
+    {
+        $this->loadTranslationsFrom(self::BASE_PATH . 'lang', 'maintenancemode');
+    }
 
     /**
      * Register our config file
      *
      * @return void
      */
-    protected function registerConfig()
+    protected function loadConfig()
     {
-        // Setup the paths
-        $userConfigPath = app()->configPath() . '/packages/misterphilip/maintenancemode/config.php';
-        $defaultConfigPath = __DIR__ .'/../../config/config.php';
-
-        // Grab the default config
-        $config = $this->app['files']->getRequire($defaultConfigPath);
-
-        // Check if the user-configuration exists
-        if(file_exists($userConfigPath))
-        {
-            // User has config, let's merge them properly
-            $userConfig = $this->app['files']->getRequire($userConfigPath);
-            $config = array_replace_recursive($config, $userConfig);
-        }
-
-        // Set each of the items like ->package() previously did
-        $this->app['config']->set('maintenancemode::config', $config);
-        $this->app['view']->addNamespace('maintenancemode', __DIR__.'/../../views');
-        $this->app['translator']->addNamespace('maintenancemode', __DIR__.'/../../lang');
+        $this->publishes([
+            self::BASE_PATH . 'config/maintenancemode.php' => config_path('maintenancemode.php'),
+        ], 'config');
     }
 }

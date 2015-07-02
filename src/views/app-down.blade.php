@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex,nofollow">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-    <title>{{ Lang::get(Config::get('maintenancemode::config.language-path', 'maintenancemode::defaults.') . '.title') }}</title>
+    <title>{{ Lang::get(Config::get('maintenancemode.language-path', 'maintenancemode::defaults.') . '.title') }}</title>
     <style>
         html, body {
             width: 100%;
@@ -38,8 +38,8 @@
 </head>
 <body>
 <header>
-    <h1>{{ ${Config::get('maintenancemode::config.inject.prefix').'Message'} }}</h1>
-    <p>{{ Lang::get(Config::get('maintenancemode::config.language-path', 'maintenancemode::defaults.') . '.last-updated', ['timestamp' => ${Config::get('maintenancemode::config.inject.prefix').'Timestamp'}->diffForHumans()]) }}</p>
+    <h1>{{ ${Config::get('maintenancemode.inject.prefix').'Message'} }}</h1>
+    <p>{{ Lang::get(Config::get('maintenancemode.language-path', 'maintenancemode::defaults.') . '.last-updated', ['timestamp' => ${Config::get('maintenancemode.inject.prefix').'Timestamp'}->diffForHumans()]) }}</p>
 </header>
 </body>
 </html>

@@ -46,9 +46,9 @@ class CheckForMaintenanceMode implements Middleware
     public function handle($request, Closure $next)
     {
         // Grab our configs
-        $injectGlobally = $this->app['config']->get('maintenancemode::config.inject.globally', true);
-        $prefix = $this->app['config']->get('maintenancemode::config.inject.prefix', 'MaintenanceMode');
-        $lang = $this->app['config']->get('maintenancemode::config.language-path', 'maintenancemode::defaults.');
+        $injectGlobally = $this->app['config']->get('maintenancemode.inject.globally', true);
+        $prefix = $this->app['config']->get('maintenancemode.inject.prefix', 'MaintenanceMode');
+        $lang = $this->app['config']->get('maintenancemode.language-path', 'maintenancemode::defaults');
 
         // Setup value array
         $info = [
@@ -92,7 +92,7 @@ class CheckForMaintenanceMode implements Middleware
             $isExempt = false;
 
             // Grab all of the exemption classes to create/execute against
-            $exemptions = $this->app['config']->get('maintenancemode::config.exemptions', []);
+            $exemptions = $this->app['config']->get('maintenancemode.exemptions', []);
             foreach($exemptions as $className)
             {
                 if(class_exists($className))
@@ -126,7 +126,7 @@ class CheckForMaintenanceMode implements Middleware
                 $this->app['session']->start();
 
                 // The user isn't exempt, let's show them the maintenance page!
-                $view = $this->app['config']->get('maintenancemode::config.view-page', 'maintenancemode::app-down');
+                $view = $this->app['config']->get('maintenancemode.view-page', 'maintenancemode::app-down');
 
                 // $view = 'errors.503';
                 return new Response(view($view, $info), 503);
@@ -143,7 +143,6 @@ class CheckForMaintenanceMode implements Middleware
                 }
             }
         }
-
         return $next($request);
     }
 }

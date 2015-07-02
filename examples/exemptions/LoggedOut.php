@@ -19,6 +19,6 @@ class LoggedOut extends MaintenanceModeExemption
     public function isExempt()
     {
         // Return true (exempt) if the user is a guest
-        return Auth::guest();
+        return $this->app['auth']->guest();
     }
 }
