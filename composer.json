@@ -19,6 +19,5 @@
         "psr-0": {
             "MisterPhilip\\MaintenanceMode": "src/"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
