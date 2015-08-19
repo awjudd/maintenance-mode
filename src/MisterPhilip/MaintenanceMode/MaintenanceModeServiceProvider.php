@@ -12,8 +12,6 @@ class MaintenanceModeServiceProvider extends ServiceProvider
 	 */
 	protected $defer = false;
 
-    const BASE_PATH = __DIR__ . '/../../';
-
     /**
      * Bootstrap our application events.
      *
@@ -35,7 +33,7 @@ class MaintenanceModeServiceProvider extends ServiceProvider
 	public function register()
 	{
         $this->mergeConfigFrom(
-            self::BASE_PATH . 'config/maintenancemode.php', 'maintenancemode'
+            $this->getRelativePath('config/maintenancemode.php'), 'maintenancemode'
         );
 	}
 
@@ -46,10 +44,10 @@ class MaintenanceModeServiceProvider extends ServiceProvider
      */
     protected function loadViews()
     {
-        $this->loadViewsFrom(self::BASE_PATH . 'views', 'maintenancemode');
+        $this->loadViewsFrom($this->getRelativePath('views'), 'maintenancemode');
 
         $this->publishes([
-            self::BASE_PATH . 'views' => base_path('resources/views/vendor/maintenancemode'),
+            $this->getRelativePath('views') => base_path('resources/views/vendor/maintenancemode'),
         ], 'views');
     }
 
@@ -60,7 +58,7 @@ class MaintenanceModeServiceProvider extends ServiceProvider
      */
     protected function loadTranslations()
     {
-        $this->loadTranslationsFrom(self::BASE_PATH . 'lang', 'maintenancemode');
+        $this->loadTranslationsFrom($this->getRelativePath('lang'), 'maintenancemode');
     }
 
     /**
@@ -71,7 +69,19 @@ class MaintenanceModeServiceProvider extends ServiceProvider
     protected function loadConfig()
     {
         $this->publishes([
-            self::BASE_PATH . 'config/maintenancemode.php' => config_path('maintenancemode.php'),
+            $this->getRelativePath('config/maintenancemode.php') => config_path('maintenancemode.php'),
         ], 'config');
+    }
+
+    /**
+     * Get the full path, relative to the package
+     *
+     * @param $path
+     *
+     * @return string
+     */
+    protected function getRelativePath($path = '')
+    {
+        return __DIR__ . '/../../' . $path;
     }
 }
