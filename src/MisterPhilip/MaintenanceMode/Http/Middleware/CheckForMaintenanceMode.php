@@ -3,7 +3,6 @@
 use Closure;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
-use Illuminate\Contracts\Routing\Middleware;
 use Illuminate\Contracts\Foundation\Application;
 use MisterPhilip\MaintenanceMode\Exemptions\MaintenanceModeExemption;
 
@@ -15,7 +14,7 @@ use MisterPhilip\MaintenanceMode\Exceptions\ExemptionDoesNotExist;
  *
  * @package MisterPhilip\MaintenanceMode
  */
-class CheckForMaintenanceMode implements Middleware
+class CheckForMaintenanceMode
 {
     /**
      * The application implementation.
