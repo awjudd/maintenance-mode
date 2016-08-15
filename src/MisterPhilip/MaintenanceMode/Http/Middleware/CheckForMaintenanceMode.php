@@ -67,13 +67,18 @@ class CheckForMaintenanceMode
             {
                 // Grab the stored information
                 $fileContents = $this->app['files']->get($path);
-                if(preg_match('~([0-9]+)\|(.*)~', $fileContents, $matches))
+                if(preg_match('~([0-9]+)\|message:(.*)\|view:([^|]+)?$~', $fileContents, $matches))
                 {
                     // And put it into our array, if it exists
                     $info[$prefix.'Timestamp'] = Carbon::createFromTimeStamp($matches[1]);
-                    if(isset($matches[2]) && $matches[2] != '')
+                    if(isset($matches[2]) && $matches[2] !== '')
                     {
                         $info[$prefix.'Message'] = $matches[2];
+                    }
+
+                    if(isset($matches[3]) && $matches[3] !== '' && $this->app['view']->exists($matches[3]))
+                    {
+                        $view = $matches[3];
                     }
                 }
             }
@@ -125,9 +130,11 @@ class CheckForMaintenanceMode
                 $this->app['session']->start();
 
                 // The user isn't exempt, let's show them the maintenance page!
-                $view = $this->app['config']->get('maintenancemode.view-page', 'maintenancemode::app-down');
+                if(!isset($view)) {
+                    // No view was passed to us in the console, what about the config?
+                    $view = $this->app['config']->get('maintenancemode.view-page', 'maintenancemode::app-down');
+                }
 
-                // $view = 'errors.503';
                 return new Response(view($view, $info), 503);
             }
         }

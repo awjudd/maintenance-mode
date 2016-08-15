@@ -65,7 +65,7 @@ Finally, in `app/Http/Kernel.php` replace the current MaintenanceMode Middleware
 or
 
 ```php
-'\Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class',
+\Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
 ```
 
 with
@@ -76,10 +76,10 @@ with
 
 ## Usage
 
-This package uses the same syntax as the default `artisan down` command, except with 1 optional argument:
+This package overwrites the default `artisan down` command, with one optional argument and one option:
 
 ```bash
-$ php artisan down [message]
+$ php artisan down [message] [--view=VIEW]
 ```
 
 For example,
@@ -91,6 +91,12 @@ $ php artisan down "We're currently upgrading our system! Please check back late
 would show users a message of "We're doing some routine maintenance! Be back soon!". If you don't pass in a 
 message, the default "We're currently working on the site, please try again later" will
 display to the users. Of course this default is configurable via a language string.
+
+You can also change the view that is shown each time you run the `artisan down` command via the `--view=[VIEW]` option:
+
+```bash
+$ php artisan down "Be back in a few!" --view="errors/maintenance"
+```
 
 To bring your application back online, run the normal app up command:
 
@@ -111,7 +117,8 @@ Below are the default configuration options and a short description on each. Don
 information is within the configuration file too!
 
   - `view` (string)
-    - The view to show to users when maintenance mode is currently enabled
+    - The view to show to users when maintenance mode is currently enabled. This can be temporarily overridden when 
+    the command is called via the `--view` option
     - Defaults to `maintenancemode::app-down`
   - `notification-styles` (boolean)
     - Include CSS styling with the optional [maintenance notification](#maintenance-notification) view
@@ -250,6 +257,13 @@ variable names above. For example, if `inject.prefix = "Foobar"`, your view vari
 
 **NOTE**: By default, these variables are available in all views. To disable this functionality and have it 
 only inject variables on the maintenance page, change the `inject.global` configuration value to `false`.
+
+You can also temporarily override the view shown by passing in the `--view` option when calling the `artisan down` 
+command. E.g. if you wanted to use the default `errors/503.blade.php` view, you could call:
+
+```bash
+$ php artisan down --view="error/503"
+```
 
 ### Maintenance Notification
 
