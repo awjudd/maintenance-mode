@@ -20,6 +20,7 @@ This package is a drop-in replacement for Laravel 5's maintenance mode. It inclu
   1. [Views](#views)
     1. [Application Down](#application-down)
     1. [Maintenance Notification](#maintenance-notification)
+  1. [Events](#events)
 
 ## Installation
 
@@ -278,4 +279,21 @@ You can enable this notification by placing the following code within your main 
 
 ```php
 @include('maintenancemode::notification')
+```
+
+## Events
+
+This package [fires an event](https://laravel.com/docs/master/events), 
+`MisterPhilip\MaintenanceMode\Events\MaintenanceModeEnabled`, whenever the application goes down for maintenance. 
+You can add your own listener in your events Service Provider. By default this is located at 
+`app/providers/EventServiceProvider.php`. An example event listener would be sending admins an email whenever the 
+application was put into maintenance mode:
+
+```php
+protected $listen = [
+    'MisterPhilip\MaintenanceMode\Events\MaintenanceModeEnabled' => [
+        'App\Listeners\AdminEmailMaintenanceAnnouncement',
+    ],
+    // ..
+];
 ```

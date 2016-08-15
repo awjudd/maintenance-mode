@@ -1,8 +1,9 @@
 <?php namespace MisterPhilip\MaintenanceMode\Console\Commands;
 
-use File;
+use File, Event;
 use Carbon\Carbon;
 use Illuminate\Foundation\Console\DownCommand;
+use MisterPhilip\MaintenanceMode\Events\MaintenanceModeEnabled;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -52,6 +53,9 @@ class StartMaintenanceCommand extends DownCommand
         if($view && !$this->laravel->view->exists($view)) {
             $this->error('View "' . $view . '" doesn\'t exist. Falling back to configuration file');
         }
+
+        // Fire an event
+        Event::fire(new MaintenanceModeEnabled($timestamp, $message));
     }
 
     /**
