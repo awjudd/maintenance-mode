@@ -1,11 +1,8 @@
 <?php namespace MisterPhilip\MaintenanceMode\Console\Commands;
 
 use File, Event;
-use Carbon\Carbon;
 use Illuminate\Foundation\Console\DownCommand;
 use MisterPhilip\MaintenanceMode\Events\MaintenanceModeEnabled;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class StartMaintenanceCommand
@@ -14,13 +11,21 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class StartMaintenanceCommand extends DownCommand
 {
+    /**
+     * Flag to abort the command (e.g. bad view selected)
+     *
+     * @var bool
+     */
+    protected $abort = false;
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'down {message?} {--view=}';
+    protected $signature = 'down {--message= : The message for the maintenance mode. }
+            {--retry= : The number of seconds after which the request may be retried.}
+            {--view= : The view to use for this instance of maintenance mode.}';
 
     /**
      * Execute the maintenance mode command
@@ -29,51 +34,59 @@ class StartMaintenanceCommand extends DownCommand
      */
     public function fire()
     {
-        $path = $this->laravel->storagePath().'/framework/down';
-
-        $timestamp = Carbon::now()->timestamp;
-        $message = $this->argument('message');
-        $view = $this->option('view');
-
-        // Add the file with our information
-        File::put($path, $timestamp . '|message:' . $message . '|view:' . $view);
-
-        $output = 'Application is now in maintenance mode';
-
-        if($message) {
-            $output .= ' with a message of  "' . $message . '"';
+        $payload = $this->getDownFilePayload();
+        if($this->abort)
+        {
+            return false;
         }
 
-        if($view && $this->laravel->view->exists($view)) {
-            $output .= ' using view "' . $view . '"';
-        }
-
-        // Inform the sysadmin/developer of the changes and any errors
-        $this->info($output);
-        if($view && !$this->laravel->view->exists($view)) {
-            $this->error('View "' . $view . '" doesn\'t exist. Falling back to configuration file');
-        }
+        file_put_contents(
+            $this->laravel->storagePath().'/framework/down',
+            json_encode($payload, JSON_PRETTY_PRINT)
+        );
+        $this->comment('Application is now in maintenance mode.');
 
         // Fire an event
-        Event::fire(new MaintenanceModeEnabled($timestamp, $message));
+        Event::fire(new MaintenanceModeEnabled($payload));
     }
 
     /**
-     * Get the console command arguments.
+     * Get the payload to be placed in the "down" file.
      *
      * @return array
      */
-    protected function getArguments()
+    protected function getDownFilePayload()
     {
         return [
-            ['message', InputArgument::OPTIONAL, 'A message to display, optional'],
+            'time' => time(),
+            'message' => $this->option('message'),
+            'retry' => $this->getRetryTime(),
+            'view'  => $this->getSelectedView(),
         ];
     }
 
-    protected function getOptions()
+    /**
+     * Get the selected view, if one exists
+     *
+     * @return string
+     */
+    protected function getSelectedView()
     {
-        return [
-            ['view', InputOption::VALUE_REQUIRED, 'The view to use instead of the one specified in the configuration, optional'],
-        ];
+        $view = $this->option('view');
+
+        if($view && !$this->laravel->view->exists($view))
+        {
+            $this->error("The view \"{$view}\" does not exist.");
+            if(!$this->confirm('Do you wish to continue? [y|N]'))
+            {
+                $this->abort = true;
+            }
+            else
+            {
+                $this->info('OK, falling back to the view defined in the config file.');
+            }
+        }
+
+        return $view;
     }
 }

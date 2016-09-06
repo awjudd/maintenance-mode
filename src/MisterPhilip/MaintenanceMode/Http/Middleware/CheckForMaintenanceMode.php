@@ -1,11 +1,11 @@
 <?php namespace MisterPhilip\MaintenanceMode\Http\Middleware;
 
 use Closure;
-use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Contracts\Foundation\Application;
-use MisterPhilip\MaintenanceMode\Exemptions\MaintenanceModeExemption;
+use Illuminate\Foundation\Http\Exceptions\MaintenanceModeException;
 
+use MisterPhilip\MaintenanceMode\Exemptions\MaintenanceModeExemption;
 use MisterPhilip\MaintenanceMode\Exceptions\InvalidExemption;
 use MisterPhilip\MaintenanceMode\Exceptions\ExemptionDoesNotExist;
 
@@ -51,9 +51,11 @@ class CheckForMaintenanceMode
 
         // Setup value array
         $info = [
-            $prefix . 'Enabled' => false,
-            $prefix . 'Timestamp' => Carbon::now(),
-            $prefix . 'Message' => $this->app['translator']->get($lang . '.message'),
+            $prefix . 'Enabled'     => false,
+            $prefix . 'Timestamp'   => time(),
+            $prefix . 'Message'     => $this->app['translator']->get($lang . '.message'),
+            $prefix . 'View'        => '',
+            $prefix . 'Retry'       => null,
         ];
 
         // Are we down?
@@ -62,26 +64,13 @@ class CheckForMaintenanceMode
             // Yes. :(
             $info[$prefix.'Enabled'] = true;
 
-            $path = storage_path().'/framework/down';
-            if($this->app['files']->exists($path))
-            {
-                // Grab the stored information
-                $fileContents = $this->app['files']->get($path);
-                if(preg_match('~([0-9]+)\|message:(.*)\|view:([^|]+)?$~', $fileContents, $matches))
-                {
-                    // And put it into our array, if it exists
-                    $info[$prefix.'Timestamp'] = Carbon::createFromTimeStamp($matches[1]);
-                    if(isset($matches[2]) && $matches[2] !== '')
-                    {
-                        $info[$prefix.'Message'] = $matches[2];
-                    }
+            $data = json_decode(file_get_contents($this->app->storagePath().'/framework/down'), true);
 
-                    if(isset($matches[3]) && $matches[3] !== '' && $this->app['view']->exists($matches[3]))
-                    {
-                        $view = $matches[3];
-                    }
-                }
-            }
+            // Update the array with data from down file
+            $info[$prefix . 'Timestamp'] = $data['time'];
+            $info[$prefix . 'Message'] = $data['message'];
+            $info[$prefix . 'View'] = $data['view'];
+            $info[$prefix . 'Retry'] = $data['retry'];
 
             if($injectGlobally)
             {
@@ -129,13 +118,7 @@ class CheckForMaintenanceMode
                 // Since the session isn't started... it'll throw an error
                 $this->app['session']->start();
 
-                // The user isn't exempt, let's show them the maintenance page!
-                if(!isset($view)) {
-                    // No view was passed to us in the console, what about the config?
-                    $view = $this->app['config']->get('maintenancemode.view-page', 'maintenancemode::app-down');
-                }
-
-                return new Response(view($view, $info), 503);
+                throw new MaintenanceModeException($data['time'], $data['retry'], $data['message']);
             }
         }
         else

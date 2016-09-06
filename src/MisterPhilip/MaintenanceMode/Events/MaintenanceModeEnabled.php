@@ -4,26 +4,17 @@ class MaintenanceModeEnabled
 {
 
     /**
-     * Timestamp of when the application was brought down
+     * The maintenance mode information
      *
-     * @var string
+     * @var array
      */
-    public $timestamp;
+    public $info;
 
     /**
-     * The message the application was brought down with
-     *
-     * @var string
+     * @param        $payload
      */
-    public $message;
-
-    /**
-     * @param        $timestamp
-     * @param string $message
-     */
-    public function __construct($timestamp, $message = '')
+    public function __construct($payload)
     {
-        $this->timestamp    = $timestamp;
-        $this->message      = $message;
+        $this->info = $payload;
     }
 }

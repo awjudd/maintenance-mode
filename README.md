@@ -1,7 +1,7 @@
 # Enhanced Laravel 5 Maintenance Mode
 
-This package is a drop-in replacement for Laravel 5.0 - 5.2's maintenance mode. For 5.3+, please use the 
-[1.1 branch](https://github.com/MisterPhilip/maintenance-mode)! Features include:
+This package is a drop-in replacement for Laravel 5.3's maintenance mode. For 5.0 - 5.2, please use the 
+[1.0 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.0)! Features include:
  - Allowing custom maintenance messages to be shown to users
  - Including a timestamp of when the application went down
  - Exempting select users via custom exemption classes
@@ -11,6 +11,7 @@ This package is a drop-in replacement for Laravel 5.0 - 5.2's maintenance mode. 
 ## Table of Contents
 
   1. [Installation](#installation)
+  1. [Changes from 1.0](#changes-from-1.0)
   1. [Usage](#usage)
   1. [Configuration](#configuration)
     1. [Default Configuration](#default-configuration)    
@@ -30,7 +31,7 @@ This package is a drop-in replacement for Laravel 5.0 - 5.2's maintenance mode. 
 Within `composer.json` add the following line to the end of the `require` section:
 
 ```json
-"misterphilip/maintenance-mode": "1.0.*"
+"misterphilip/maintenance-mode": "1.1.*"
 ```
 
 Next, run the Composer update command:
@@ -63,12 +64,6 @@ Add `MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider::class,` and
 Finally, in `app/Http/Kernel.php` replace the current MaintenanceMode Middleware
 
 ```php
-'Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode',
-```
-
-or
-
-```php
 \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
 ```
 
@@ -78,18 +73,25 @@ with
 \MisterPhilip\MaintenanceMode\Http\Middleware\CheckForMaintenanceMode::class,
 ```
 
+
+## Changes from 1.0
+
+With Laravel 5.3, messages are now allowed in the default `artisan down` command, as well as adding an option for the 
+`Retry-After` HTTP header. Because of this it should be noted that the syntax to call the `artisan down` command has 
+changed from the 1.0 branch to better match Laravel's default command.
+
 ## Usage
 
-This package overwrites the default `artisan down` command, with one optional argument and one option:
+This package overwrites the default `artisan down` command, with more options:
 
 ```bash
-$ php artisan down [message] [--view=VIEW]
+$ php artisan down [--message=MESSAGE] [--retry=RETRY] [--view=VIEW]
 ```
 
 For example,
 
 ```bash
-$ php artisan down "We're currently upgrading our system! Please check back later."
+$ php artisan down --message="We're currently upgrading our system! Please check back later."
 ```
 
 would show users a message of "We're doing some routine maintenance! Be back soon!". If you don't pass in a 
@@ -99,7 +101,13 @@ display to the users. Of course this default is configurable via a language stri
 You can also change the view that is shown each time you run the `artisan down` command via the `--view=[VIEW]` option:
 
 ```bash
-$ php artisan down "Be back in a few!" --view="errors/maintenance"
+$ php artisan down --message="Be back in a few!" --view="errors/maintenance"
+```
+
+And of course you can use the default `--retry` option as well:
+
+```bash
+$ php artisan down --message="Be back in a few!" --view="errors/maintenance" --retry=60
 ```
 
 To bring your application back online, run the normal app up command:
@@ -286,7 +294,7 @@ You can enable this notification by placing the following code within your main 
 
 ## Events
 
-This package [fires an event](https://laravel.com/docs/5.2/events), 
+This package [fires an event](https://laravel.com/docs/master/events), 
 `MisterPhilip\MaintenanceMode\Events\MaintenanceModeEnabled`, whenever the application goes down for maintenance. 
 You can add your own listener in your events Service Provider. By default this is located at 
 `app/providers/EventServiceProvider.php`. An example event listener would be sending admins an email whenever the 
@@ -300,3 +308,6 @@ protected $listen = [
     // ..
 ];
 ```
+
+An array for the payload that is passed to the maintenance call (including message, timestamp, retry, and view) is 
+passed in the event under the `info` property. 
