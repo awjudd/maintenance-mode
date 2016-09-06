@@ -1,9 +1,12 @@
 # Enhanced Laravel 5 Maintenance Mode
 
-This package is a drop-in replacement for Laravel 5's maintenance mode. It includes:
+This package is a drop-in replacement for Laravel 5.0 - 5.2's maintenance mode. For 5.3+, please use the 
+[1.1 branch](https://github.com/MisterPhilip/maintenance-mode)! Features include:
  - Allowing custom maintenance messages to be shown to users
  - Including a timestamp of when the application went down
  - Exempting select users via custom exemption classes
+ - Firing an event for when the application goes down
+ - Dynamically selecting the view to be shown on down command
  
 ## Table of Contents
 
@@ -283,7 +286,7 @@ You can enable this notification by placing the following code within your main 
 
 ## Events
 
-This package [fires an event](https://laravel.com/docs/master/events), 
+This package [fires an event](https://laravel.com/docs/5.2/events), 
 `MisterPhilip\MaintenanceMode\Events\MaintenanceModeEnabled`, whenever the application goes down for maintenance. 
 You can add your own listener in your events Service Provider. By default this is located at 
 `app/providers/EventServiceProvider.php`. An example event listener would be sending admins an email whenever the 
