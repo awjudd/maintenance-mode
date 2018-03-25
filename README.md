@@ -1,6 +1,6 @@
 # Enhanced Laravel 5 Maintenance Mode
 
-This package is a drop-in replacement for Laravel 5.3's maintenance mode. For 5.0 - 5.2, please use the 
+This package is a drop-in replacement for Laravel 5.6's maintenance mode. For 5.0 - 5.2, please use the 
 [1.0 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.0)! Features include:
  - Allowing custom maintenance messages to be shown to users
  - Including a timestamp of when the application went down
@@ -76,7 +76,7 @@ with
 
 ## Changes from 1.0
 
-With Laravel 5.3, messages are now allowed in the default `artisan down` command, as well as adding an option for the 
+With Laravel 5.6, messages are now allowed in the default `artisan down` command, as well as adding an option for the 
 `Retry-After` HTTP header. Because of this it should be noted that the syntax to call the `artisan down` command has 
 changed from the 1.0 branch to better match Laravel's default command.
 
