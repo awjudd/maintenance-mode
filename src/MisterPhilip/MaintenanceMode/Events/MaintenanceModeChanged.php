@@ -45,24 +45,9 @@ abstract class MaintenanceModeChanged
      */
     public function __construct($time = null, $message = null, $view = null, $retry = null)
     {
-        if(!is_null($time))
-        {
-            $this->time = Carbon::createFromTimestamp($time);
-        }
-
-        if(!is_null($message))
-        {
-            $this->message = $message;
-        }
-
-        if(!is_null($view))
-        {
-            $this->view = $view;
-        }
-
-        if(!is_null($retry))
-        {
-            $this->retry = $retry;
-        }
+        $this->time = Carbon::createFromTimestamp($time);
+        $this->message = $message;
+        $this->view = $view;
+        $this->retry = $retry;
     }
 }
