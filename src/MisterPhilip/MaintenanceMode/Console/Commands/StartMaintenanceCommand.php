@@ -30,23 +30,20 @@ class StartMaintenanceCommand extends DownCommand
     /**
      * Execute the maintenance mode command
      *
-     * @return void
+     * @return bool|void
      */
     public function handle()
     {
-        $payload = $this->getDownFilePayload();
         if($this->abort)
         {
             return false;
         }
 
-        file_put_contents(
-            $this->laravel->storagePath().'/framework/down',
-            json_encode($payload, JSON_PRETTY_PRINT)
-        );
-        $this->comment('Application is now in maintenance mode.');
+        // Call the original method, writing to the down file & console output
+        parent::handle();
 
         // Fire an event
+        $payload = $this->getDownFilePayload();
         Event::fire(new MaintenanceModeEnabled($payload));
     }
 
@@ -57,12 +54,10 @@ class StartMaintenanceCommand extends DownCommand
      */
     protected function getDownFilePayload()
     {
-        return [
-            'time' => time(),
-            'message' => $this->option('message'),
-            'retry' => $this->getRetryTime(),
-            'view'  => $this->getSelectedView(),
-        ];
+        // Get the Laravel file data & add ours (selected view)
+        $data = parent::getDownFilePayload();
+        $data['view'] = $this->getSelectedView();
+        return $data;
     }
 
     /**
@@ -74,6 +69,7 @@ class StartMaintenanceCommand extends DownCommand
     {
         $view = $this->option('view');
 
+        // Verify the user passed us a correct view
         if($view && !$this->laravel->view->exists($view))
         {
             $this->error("The view \"{$view}\" does not exist.");

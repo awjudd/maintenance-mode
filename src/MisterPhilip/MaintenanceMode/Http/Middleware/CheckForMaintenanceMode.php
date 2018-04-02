@@ -3,7 +3,8 @@
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Response;
-use Illuminate\Contracts\Foundation\Application;
+
+use Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode as LaravelMaintenanceMode;
 
 use Illuminate\Support\Facades\App;
 use MisterPhilip\MaintenanceMode\Exceptions\MaintenanceModeException;
@@ -16,30 +17,13 @@ use MisterPhilip\MaintenanceMode\Exceptions\ExemptionDoesNotExist;
  *
  * @package MisterPhilip\MaintenanceMode
  */
-class CheckForMaintenanceMode
+class CheckForMaintenanceMode extends LaravelMaintenanceMode
 {
-    /**
-     * The application implementation.
-     *
-     * @var Application
-     */
-    protected $app;
-
-    /**
-     * Create a new filter instance.
-     *
-     * @param  Application  $app
-     */
-    public function __construct(Application $app)
-    {
-        $this->app = $app;
-    }
-
     /**
      * Handle the request
      *
      * @param \Illuminate\Http\Request $request
-     * @param callable                 $next
+     * @param  \Closure                $next
      * @return Response
      * @throws ExemptionDoesNotExist
      * @throws InvalidExemption
@@ -57,7 +41,7 @@ class CheckForMaintenanceMode
             $prefix . 'Timestamp'   => time(),
             $prefix . 'Message'     => $this->app['translator']->get($lang . '.message'),
             $prefix . 'View'        => null,
-            $prefix . 'Retry'       => null,
+            $prefix . 'Retry'       => 60,
         ];
 
         // Are we down?
@@ -73,12 +57,18 @@ class CheckForMaintenanceMode
             // Update the array with data from down file
             $info[$prefix . 'Timestamp'] = Carbon::createFromTimestamp($data['time']);
 
-            if($data['message'])
+            if(isset($data['message']) && $data['message'])
+            {
                 $info[$prefix . 'Message'] = $data['message'];
-            if($data['view'])
+            }
+            if(isset($data['view']) && $data['view'])
+            {
                 $info[$prefix . 'View'] = $data['view'];
-            if($data['retry'])
-                $info[$prefix . 'Retry'] = $data['retry'];
+            }
+            if(isset($data['retry']) && intval($data['retry'], 10) !== 0)
+            {
+                $info[$prefix . 'Retry'] = intval($data['retry'], 10);
+            }
 
             if($injectGlobally)
             {
@@ -124,9 +114,7 @@ class CheckForMaintenanceMode
             if(!$isExempt)
             {
                 // Since the session isn't started... it'll throw an error
-                $this->app['session']->start();
-
-                throw new MaintenanceModeException($data['time'], $data['retry'], $data['message']);
+                throw new MaintenanceModeException($data['time'], $data['retry'], $data['message'],  $data['view']);
             }
         }
         else
