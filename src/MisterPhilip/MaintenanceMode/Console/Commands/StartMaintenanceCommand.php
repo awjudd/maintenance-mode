@@ -32,7 +32,7 @@ class StartMaintenanceCommand extends DownCommand
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         $payload = $this->getDownFilePayload();
         if($this->abort)

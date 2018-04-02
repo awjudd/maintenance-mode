@@ -1,10 +1,12 @@
 <?php namespace MisterPhilip\MaintenanceMode\Http\Middleware;
 
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Response;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Foundation\Http\Exceptions\MaintenanceModeException;
 
+use Illuminate\Support\Facades\App;
+use MisterPhilip\MaintenanceMode\Exceptions\MaintenanceModeException;
 use MisterPhilip\MaintenanceMode\Exemptions\MaintenanceModeExemption;
 use MisterPhilip\MaintenanceMode\Exceptions\InvalidExemption;
 use MisterPhilip\MaintenanceMode\Exceptions\ExemptionDoesNotExist;
@@ -54,7 +56,7 @@ class CheckForMaintenanceMode
             $prefix . 'Enabled'     => false,
             $prefix . 'Timestamp'   => time(),
             $prefix . 'Message'     => $this->app['translator']->get($lang . '.message'),
-            $prefix . 'View'        => '',
+            $prefix . 'View'        => null,
             $prefix . 'Retry'       => null,
         ];
 
@@ -62,15 +64,21 @@ class CheckForMaintenanceMode
         if($this->app->isDownForMaintenance())
         {
             // Yes. :(
+            Carbon::setLocale(App::getLocale());
+
             $info[$prefix.'Enabled'] = true;
 
             $data = json_decode(file_get_contents($this->app->storagePath().'/framework/down'), true);
 
             // Update the array with data from down file
-            $info[$prefix . 'Timestamp'] = $data['time'];
-            $info[$prefix . 'Message'] = $data['message'];
-            $info[$prefix . 'View'] = $data['view'];
-            $info[$prefix . 'Retry'] = $data['retry'];
+            $info[$prefix . 'Timestamp'] = Carbon::createFromTimestamp($data['time']);
+
+            if($data['message'])
+                $info[$prefix . 'Message'] = $data['message'];
+            if($data['view'])
+                $info[$prefix . 'View'] = $data['view'];
+            if($data['retry'])
+                $info[$prefix . 'Retry'] = $data['retry'];
 
             if($injectGlobally)
             {

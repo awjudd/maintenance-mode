@@ -15,6 +15,7 @@
                 padding: .5em;
                 background-color: #FF130F;
                 color: #fff;
+                font-family: sans-serif;
             }
             .maintenance-mode-alert strong {
                 font-weight: bold;
@@ -30,7 +31,7 @@
 
     <div class="maintenance-mode-alert" id="maintenance-mode-alert" role="alert">
 
-        <strong>Maintenance Mode</strong>
+        <strong>@lang('maintenancemode::defaults.title'):</strong>
 
         {{-- Show the truncated message (so it doesn't overflow) --}}
         @if(isset(${Config::get('maintenancemode.inject.prefix').'Message'}))
