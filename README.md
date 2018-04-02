@@ -1,7 +1,10 @@
 # Enhanced Laravel 5 Maintenance Mode
 
-This package is a drop-in replacement for Laravel 5.6's maintenance mode. For 5.0 - 5.2, please use the 
-[1.0 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.0)! Features include:
+This package is a drop-in replacement for Laravel 5.5 - 5.6's maintenance mode. For 5.0 - 5.2, please use the 
+[1.0 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.0). For 5.3 - 5.4, support may be released on the 
+[1.1 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.1) branch, should there be any interest / development 
+help. 
+ Features include:
  - Allowing custom maintenance messages to be shown to users
  - Including a timestamp of when the application went down
  - Exempting select users via custom exemption classes
@@ -31,7 +34,7 @@ This package is a drop-in replacement for Laravel 5.6's maintenance mode. For 5.
 Within `composer.json` add the following line to the end of the `require` section:
 
 ```json
-"misterphilip/maintenance-mode": "1.1.*"
+"misterphilip/maintenance-mode": "1.2.*"
 ```
 
 Next, run the Composer update command:
@@ -76,7 +79,7 @@ with
 
 ## Changes from 1.0
 
-With Laravel 5.6, messages are now allowed in the default `artisan down` command, as well as adding an option for the 
+Since Laravel 5.3, messages are now allowed in the default `artisan down` command, as well as adding an option for the 
 `Retry-After` HTTP header. Because of this it should be noted that the syntax to call the `artisan down` command has 
 changed from the 1.0 branch to better match Laravel's default command.
 
