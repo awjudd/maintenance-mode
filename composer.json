@@ -19,5 +19,13 @@
         "psr-0": {
             "MisterPhilip\\MaintenanceMode": "src/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "MisterPhilip\\MaintenanceMode\\MaintenanceModeServiceProvider",
+                "MisterPhilip\\MaintenanceMode\\MaintenanceCommandServiceProvider"
+            ]
+        }
     }
 }

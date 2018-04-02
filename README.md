@@ -30,19 +30,25 @@ development help. Features include:
 
 ## Installation
 
-Within `composer.json` add the following line to the end of the `require` section:
+Run the following command to install the latest:
+```bash
+$ composer require "misterphilip/maintenance-mode=1.2.*"
+```
+
+Or, if you prefer installing it manually, within `composer.json` add the following line to the end of the `require` section:
 
 ```json
 "misterphilip/maintenance-mode": "1.2.*"
 ```
 
-Next, run the Composer update command:
+And then run the Composer install command:
 
 ```bash
-$ composer update
+$ composer install
 ```
 
-Add `MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider::class,` and 
+Laravel _should_ automatically install the Service Providers, but verify they exist within the `config/app.php` file. 
+If they do not, add `MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider::class,` and 
 `MisterPhilip\MaintenanceMode\MaintenanceCommandServiceProvider::class,` to the end of the 
 `$providers` array in your `config/app.php`:
 
