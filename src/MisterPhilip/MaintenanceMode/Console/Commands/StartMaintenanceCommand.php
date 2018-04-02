@@ -1,4 +1,6 @@
-<?php namespace MisterPhilip\MaintenanceMode\Console\Commands;
+<?php
+
+namespace MisterPhilip\MaintenanceMode\Console\Commands;
 
 use File, Event;
 use Illuminate\Foundation\Console\DownCommand;

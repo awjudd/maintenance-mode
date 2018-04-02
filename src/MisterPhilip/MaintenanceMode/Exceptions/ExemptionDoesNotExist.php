@@ -1,4 +1,6 @@
-<?php namespace MisterPhilip\MaintenanceMode\Exceptions;
+<?php
+
+namespace MisterPhilip\MaintenanceMode\Exceptions;
 
 use Exception;
 

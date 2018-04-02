@@ -6,11 +6,6 @@ use Log;
 use Carbon\Carbon;
 use MisterPhilip\MaintenanceMode\Events\MaintenanceModeDisabled;
 
-/**
- * Class LogMaintenanceEnded
- *
- * This class logs when the maintenance mode was disabled, and how long the application was down
- */
 class LogMaintenanceEnded
 {
     /**

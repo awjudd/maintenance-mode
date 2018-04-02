@@ -1,4 +1,6 @@
-<?php namespace MisterPhilip\MaintenanceMode\Http\Middleware;
+<?php
+
+namespace MisterPhilip\MaintenanceMode\Http\Middleware;
 
 use Carbon\Carbon;
 use Closure;

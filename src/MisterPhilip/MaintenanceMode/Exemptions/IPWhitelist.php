@@ -1,4 +1,6 @@
-<?php namespace MisterPhilip\MaintenanceMode\Exemptions;
+<?php
+
+namespace MisterPhilip\MaintenanceMode\Exemptions;
 
 use Config, Request;
 

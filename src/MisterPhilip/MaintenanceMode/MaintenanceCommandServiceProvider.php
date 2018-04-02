@@ -1,4 +1,6 @@
-<?php namespace MisterPhilip\MaintenanceMode;
+<?php
+
+namespace MisterPhilip\MaintenanceMode;
 
 use Illuminate\Support\ServiceProvider;
 use MisterPhilip\MaintenanceMode\Console\Commands\EndMaintenanceCommand;
