@@ -16,6 +16,7 @@
                 background-color: #FF130F;
                 color: #fff;
                 font-family: sans-serif;
+                box-sizing: border-box;
             }
             .maintenance-mode-alert strong {
                 font-weight: bold;
@@ -35,7 +36,9 @@
 
         {{-- Show the truncated message (so it doesn't overflow) --}}
         @if(isset(${Config::get('maintenancemode.inject.prefix').'Message'}))
-            {{ str_limit(${Config::get('maintenancemode.inject.prefix').'Message'}, 100, "&hellip;") }}
+            <span title="{{ ${Config::get('maintenancemode.inject.prefix').'Message'} }}">
+                {{ str_limit(${Config::get('maintenancemode.inject.prefix').'Message'}, 100, "&hellip;") }}
+            </span>
         @endif
 
         {{-- And show a human-friendly timestamp --}}
