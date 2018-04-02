@@ -86,7 +86,11 @@ with
 
 Since Laravel 5.3, messages are now allowed in the default `artisan down` command, as well as adding an option for the 
 `Retry-After` HTTP header. Because of this it should be noted that the syntax to call the `artisan down` command has 
-changed from the 1.0 branch to better match Laravel's default command.
+changed from the 1.0 branch to better match Laravel's default command. 
+
+Additionally, we've changed the 
+`MaintenanceModeEnabled` event to no longer use the `info` property, but instead have separate properties for each piece 
+of information. See more in the [events section](#events).
 
 ## Usage
 
@@ -307,19 +311,23 @@ You can enable this notification by placing the following code within your main 
 ## Events
 
 This package [fires an event](https://laravel.com/docs/master/events), 
-`MisterPhilip\MaintenanceMode\Events\MaintenanceModeEnabled`, whenever the application goes down for maintenance. 
-You can add your own listener in your events Service Provider. By default this is located at 
-`app/providers/EventServiceProvider.php`. An example event listener would be sending admins an email whenever the 
-application was put into maintenance mode:
+`MisterPhilip\MaintenanceMode\Events\MaintenanceModeEnabled`, whenever the application goes down for maintenance,
+and `MisterPhilip\MaintenanceMode\Events\MaintenanceModeDisabled` when it is brought back up. You can add your own 
+listeners in your events Service Provider. By default this is located at `app/providers/EventServiceProvider.php`. 
+You can find several example listeners in the [events examples](examples/events), including logging when the 
+application went down or up, and updating [Statuspage](https://www.statuspage.io) via the 
+[checkitonus/php-statuspage-sdk](https://github.com/checkitonus/php-statuspage-sdk) package.
 
 ```php
 protected $listen = [
     'MisterPhilip\MaintenanceMode\Events\MaintenanceModeEnabled' => [
-        'App\Listeners\AdminEmailMaintenanceAnnouncement',
+        'App\Listeners\UpdateStatusPageMaintenanceStarted',
+    ],
+    'MisterPhilip\MaintenanceMode\Events\MaintenanceModeDisabled' => [
+        'App\Listeners\UpdateStatusPageMaintenanceEnded',
     ],
     // ..
 ];
 ```
 
-An array for the payload that is passed to the maintenance call (including message, timestamp, retry, and view) is 
-passed in the event under the `info` property. 
+The original `message`, `time` the app went down, `retry` length, and `view` are all properties available on both events.

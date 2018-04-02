@@ -2,7 +2,7 @@
 
 use Carbon\Carbon;
 
-class MaintenanceModeEnabled
+class MaintenanceModeDisabled
 {
 
     /**
@@ -34,7 +34,7 @@ class MaintenanceModeEnabled
     public $retry;
 
     /**
-     * Build a new event when Maintenance Mode is enabled
+     * Build a new event when Maintenance Mode is disabled
      *
      * @param int|null $time
      * @param string|null $message

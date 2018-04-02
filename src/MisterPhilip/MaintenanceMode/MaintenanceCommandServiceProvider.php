@@ -1,6 +1,7 @@
 <?php namespace MisterPhilip\MaintenanceMode;
 
 use Illuminate\Support\ServiceProvider;
+use MisterPhilip\MaintenanceMode\Console\Commands\EndMaintenanceCommand;
 use MisterPhilip\MaintenanceMode\Console\Commands\StartMaintenanceCommand;
 
 class MaintenanceCommandServiceProvider extends ServiceProvider
@@ -22,9 +23,15 @@ class MaintenanceCommandServiceProvider extends ServiceProvider
     {
         $this->app->singleton('command.down', function($app)
         {
-            return new StartMaintenanceCommand;
+            return new StartMaintenanceCommand();
         });
-        $this->commands('command.down');
+
+
+        $this->app->singleton('command.up', function($app)
+        {
+            return new EndMaintenanceCommand();
+        });
+        $this->commands(['command.down', 'command.up']);
     }
 
     /**
@@ -34,6 +41,6 @@ class MaintenanceCommandServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['command.down'];
+        return ['command.down', 'command.up'];
     }
 }

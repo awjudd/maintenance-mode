@@ -1,4 +1,6 @@
-<?php namespace App\Exemptions;
+<?php
+
+namespace SampleApp\Exemptions;
 
 use Auth, Config;
 
