@@ -1,10 +1,9 @@
 # Enhanced Laravel 5 Maintenance Mode
 
-This package is a drop-in replacement for Laravel 5.5 - 5.6's maintenance mode. For 5.0 - 5.2, please use the 
-[1.0 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.0). For 5.3 - 5.4, support may be released on the 
-[1.1 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.1) branch, should there be any interest / development 
-help. 
- Features include:
+This package is a drop-in replacement for Laravel 5.5 - 5.6's maintenance mode. For Laravel 5.0 - 5.2, please use the 
+[1.0 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.0). For Laravel 5.3 - 5.4, support _might_ be released 
+on the [1.1 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.1) branch, should there be any interest / 
+development help. Features include:
  - Allowing custom maintenance messages to be shown to users
  - Including a timestamp of when the application went down
  - Exempting select users via custom exemption classes
@@ -119,6 +118,10 @@ To bring your application back online, run the normal app up command:
 $ php artisan up
 ```
 
+**NOTE:** by default, two [exemptions](#exemptions) enabled, which means that if you run 
+your development server locally (127.0.0.1) _or_ you have `APP_ENV=local` in your `.env` file, you will _not_ see the 
+maintenance page. You can remove these exemptions via the [configuration](#overriding-defaults).
+
 ## Configuration
 
 This package is a drop-in replacement for the default maintenance mode provided with Laravel 5. This means 
@@ -155,7 +158,7 @@ information is within the configuration file too!
     to get the user's IP address
     - Defaults to `false`
   - `exempt-environments` (string array)
-    - An array of enviornment names that will always be exempt from the application down page
+    - An array of environment names that will always be exempt from the application down page
     - Defaults to `['local']`
   - `exemptions` (string array)
     - A list of the exemption classes to execute. *See [Exemptions](#exemptions)*
