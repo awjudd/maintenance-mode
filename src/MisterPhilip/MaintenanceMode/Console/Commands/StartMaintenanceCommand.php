@@ -47,7 +47,7 @@ class StartMaintenanceCommand extends DownCommand
 
         // Fire an event
         $payload = $this->getDownFilePayload();
-        Event::fire(new MaintenanceModeEnabled($payload['time'], $payload['message'], $payload['view'], $payload['retry']));
+        Event::fire(new MaintenanceModeEnabled($payload['time'], $payload['message'], $payload['view'], $payload['retry'], $payload['allowed']));
     }
 
     /**
@@ -60,6 +60,10 @@ class StartMaintenanceCommand extends DownCommand
         // Get the Laravel file data & add ours (selected view)
         $data = parent::getDownFilePayload();
         $data['view'] = $this->getSelectedView();
+
+        if(!isset($data['allowed'])) {
+            $data['allowed'] =  $this->option('allow');
+        }
         return $data;
     }
 
