@@ -5,6 +5,7 @@ namespace MisterPhilip\MaintenanceMode\Http\Middleware;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\IpUtils;
 
 use Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode as LaravelMaintenanceMode;
 
@@ -77,6 +78,10 @@ class CheckForMaintenanceMode extends LaravelMaintenanceMode
             $info['Enabled'] = true;
 
             $data = json_decode(file_get_contents($this->app->storagePath().'/framework/down'), true);
+
+            if (isset($data['allowed']) && IpUtils::checkIp($request->ip(), (array) $data['allowed'])) {
+                return $next($request);
+            }
 
             // Update the array with data from down file
             $info['Timestamp'] = Carbon::createFromTimestamp($data['time']);

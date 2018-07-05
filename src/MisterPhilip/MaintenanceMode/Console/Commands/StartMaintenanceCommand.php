@@ -27,7 +27,8 @@ class StartMaintenanceCommand extends DownCommand
      */
     protected $signature = 'down {--message= : The message for the maintenance mode. }
             {--retry= : The number of seconds after which the request may be retried.}
-            {--view= : The view to use for this instance of maintenance mode.}';
+	    {--view= : The view to use for this instance of maintenance mode.}
+	    {--allow=* : IP or networks allowed to access the application while in maintenance mode.}';
 
     /**
      * Execute the maintenance mode command
