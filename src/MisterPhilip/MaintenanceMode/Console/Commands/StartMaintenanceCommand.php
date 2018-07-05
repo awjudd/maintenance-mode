@@ -27,7 +27,8 @@ class StartMaintenanceCommand extends DownCommand
      */
     protected $signature = 'down {--message= : The message for the maintenance mode. }
             {--retry= : The number of seconds after which the request may be retried.}
-            {--view= : The view to use for this instance of maintenance mode.}';
+	    {--view= : The view to use for this instance of maintenance mode.}
+	    {--allow=* : IP or networks allowed to access the application while in maintenance mode.}';
 
     /**
      * Execute the maintenance mode command
@@ -46,7 +47,7 @@ class StartMaintenanceCommand extends DownCommand
 
         // Fire an event
         $payload = $this->getDownFilePayload();
-        Event::fire(new MaintenanceModeEnabled($payload['time'], $payload['message'], $payload['view'], $payload['retry']));
+        Event::fire(new MaintenanceModeEnabled($payload['time'], $payload['message'], $payload['view'], $payload['retry'], $payload['allowed']));
     }
 
     /**
@@ -59,6 +60,10 @@ class StartMaintenanceCommand extends DownCommand
         // Get the Laravel file data & add ours (selected view)
         $data = parent::getDownFilePayload();
         $data['view'] = $this->getSelectedView();
+
+        if(!isset($data['allowed'])) {
+            $data['allowed'] =  $this->option('allow');
+        }
         return $data;
     }
 

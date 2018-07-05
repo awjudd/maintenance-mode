@@ -97,7 +97,7 @@ of information. See more in the [events section](#events).
 This package overwrites the default `artisan down` command, with more options:
 
 ```bash
-$ php artisan down [--message=MESSAGE] [--retry=RETRY] [--view=VIEW]
+$ php artisan down [--message=MESSAGE] [--retry=RETRY] [--view=VIEW] [--allow*=ALLOW]
 ```
 
 For example,
@@ -202,7 +202,12 @@ exemptions that might be useful to your application.
 ##### IP Whitelist
 
 This exemption allows you to check the user's IP address against a whitelist. This is useful for
-always including your office IP(s) so that your staff doesn't see the maintenance page.
+always including your office IP(s) so that your staff doesn't see the maintenance page. This is similar 
+to the `allow` option that is offered in Laravel 5.6+ (and is backported to 5.5 with this package), however
+the `allow` option requires you to pass the IPs every time, vs. this method allows for you to have IPs stored 
+in the configuration. Both methods can be used with each other, e.g. a static internal network should always be 
+allowed via the config, while an additional IP for a vendor or remote employee can temporarily be added via the 
+`allow` option.
 
 Configuration values included with this exemption are:
 
@@ -330,4 +335,4 @@ protected $listen = [
 ];
 ```
 
-The original `message`, `time` the app went down, `retry` length, and `view` are all properties available on both events.
+The original `message`, `time` the app went down, `retry` length, `view`, and `allowed` are all properties available on both events.

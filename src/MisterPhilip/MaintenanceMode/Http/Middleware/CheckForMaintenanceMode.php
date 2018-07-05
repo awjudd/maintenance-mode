@@ -5,6 +5,7 @@ namespace MisterPhilip\MaintenanceMode\Http\Middleware;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\IpUtils;
 
 use Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode as LaravelMaintenanceMode;
 
@@ -97,7 +98,7 @@ class CheckForMaintenanceMode extends LaravelMaintenanceMode
             // Inject the information into the views before the exception
             $this->injectIntoViews($info);
 
-            if(!$this->isExempt())
+            if(!$this->isExempt($data, $request))
             {
                 // The user isn't exempt, so show them the error page
                 throw new MaintenanceModeException($data['time'], $data['retry'], $data['message'],  $data['view']);
@@ -133,11 +134,14 @@ class CheckForMaintenanceMode extends LaravelMaintenanceMode
     /**
      * Check if a user is exempt from the maintenance mode page
      *
+     * @param $data
+     * @param $request
+     *
      * @return bool
      * @throws ExemptionDoesNotExist
      * @throws InvalidExemption
      */
-    protected function isExempt()
+    protected function isExempt($data, $request)
     {
         // Grab all of the exemption classes to create/execute against
         $exemptions = $this->app['config']->get('maintenancemode.exemptions', []);
@@ -166,6 +170,12 @@ class CheckForMaintenanceMode extends LaravelMaintenanceMode
                 throw new ExemptionDoesNotExist($this->app['translator']->get($this->language . '.exceptions.missing', ['class' => $className]));
             }
         }
+
+        // Check for IP via the "allow" option
+        if (isset($data['allowed']) && IpUtils::checkIp($request->ip(), (array) $data['allowed'])) {
+            return true;
+        }
+
         return false;
     }
 }
