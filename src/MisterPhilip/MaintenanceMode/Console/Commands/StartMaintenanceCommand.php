@@ -33,12 +33,15 @@ class StartMaintenanceCommand extends DownCommand
     /**
      * Execute the maintenance mode command
      *
-     * @return bool|void
+     * @return bool
      */
     public function handle()
     {
-        if($this->abort)
+        if(!$this->verifyViewExists($this->option('view')))
         {
+            $message  = "Aborting due to missing view. Your application will remain ";
+            $message .= (file_exists($this->laravel->storagePath().'/framework/down')) ? "down from a previous down command." : "up.";
+            $this->info($message);
             return false;
         }
 
@@ -48,6 +51,7 @@ class StartMaintenanceCommand extends DownCommand
         // Fire an event
         $payload = $this->getDownFilePayload();
         Event::fire(new MaintenanceModeEnabled($payload['time'], $payload['message'], $payload['view'], $payload['retry'], $payload['allowed']));
+        return true;
     }
 
     /**
@@ -59,7 +63,7 @@ class StartMaintenanceCommand extends DownCommand
     {
         // Get the Laravel file data & add ours (selected view)
         $data = parent::getDownFilePayload();
-        $data['view'] = $this->getSelectedView();
+        $data['view'] = $this->option('view');
 
         if(!isset($data['allowed'])) {
             $data['allowed'] =  $this->option('allow');
@@ -68,28 +72,20 @@ class StartMaintenanceCommand extends DownCommand
     }
 
     /**
-     * Get the selected view, if one exists
+     * Verify the view exists, and if not then prompt if they want to continue with the default
      *
-     * @return string
+     * @param $view
+     * @return bool
      */
-    protected function getSelectedView()
+    protected function verifyViewExists($view)
     {
-        $view = $this->option('view');
-
         // Verify the user passed us a correct view
         if($view && !$this->laravel->view->exists($view))
         {
-            $this->error("The view \"{$view}\" does not exist.");
-            if(!$this->confirm('Do you wish to continue? [y|N]'))
-            {
-                $this->abort = true;
-            }
-            else
-            {
-                $this->info('OK, falling back to the view defined in the config file.');
-            }
+            $this->laravel->config->get("maintenancemode.view");
+            $this->error("The view \"{$view}\" does not exist. If you continue, the view from the configuration file \"{$this->laravel->config->get("maintenancemode.view")}\" will be used until \"{$view}\" is found.");
+            return $this->confirm('Do you wish to continue? [y|N]');
         }
-
-        return $view;
+        return true;
     }
 }
