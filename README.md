@@ -32,13 +32,13 @@ development help. Features include:
 
 Run the following command to install the latest:
 ```bash
-$ composer require "misterphilip/maintenance-mode=1.2.*"
+$ composer require "misterphilip/maintenance-mode=1.3.*"
 ```
 
 Or, if you prefer installing it manually, within `composer.json` add the following line to the end of the `require` section:
 
 ```json
-"misterphilip/maintenance-mode": "1.2.*"
+"misterphilip/maintenance-mode": "1.3.*"
 ```
 
 And then run the Composer install command:
