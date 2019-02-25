@@ -1,6 +1,6 @@
 # Enhanced Laravel 5 Maintenance Mode
 
-This package is a drop-in replacement for Laravel 5.5 - 5.7's maintenance mode. For Laravel 5.0 - 5.2, please use the
+This package is a drop-in replacement for Laravel 5.5 - 5.8's maintenance mode. For Laravel 5.0 - 5.2, please use the
 [1.0 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.0). For Laravel 5.3 - 5.4, support _might_ be released
 on the [1.1 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.1) branch, should there be any interest /
 development help. Features include:
