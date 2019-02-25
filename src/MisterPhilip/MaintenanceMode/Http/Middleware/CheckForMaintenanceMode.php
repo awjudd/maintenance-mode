@@ -77,7 +77,9 @@ class CheckForMaintenanceMode extends LaravelMaintenanceMode
 
             $info['Enabled'] = true;
 
-            $data = json_decode(file_get_contents($this->app->storagePath().'/framework/down'), true);
+            $data = ["message" => null, "view" => $this->app['config']->get('maintenance mode.view'), "retry" => null, "time" => Carbon::now()->getTimestamp()];
+
+            $data = array_merge($data, json_decode(file_get_contents($this->app->storagePath().'/framework/down'), true));
 
             // Update the array with data from down file
             $info['Timestamp'] = Carbon::createFromTimestamp($data['time']);
