@@ -44,6 +44,6 @@ class EndMaintenanceCommand extends UpCommand
         $this->info("The application is now live! Total downtime: " . Carbon::now()->diffForHumans($startingTime, true, true, 6));
 
         // Fire the event
-        Event::fire(new MaintenanceModeDisabled($data['time'], $data['message'], $data['view'], $data['retry']));
+        Event::dispatch(new MaintenanceModeDisabled($data['time'], $data['message'], $data['view'], $data['retry']));
     }
 }

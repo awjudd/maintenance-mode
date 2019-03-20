@@ -50,7 +50,7 @@ class StartMaintenanceCommand extends DownCommand
 
         // Fire an event
         $payload = $this->getDownFilePayload();
-        Event::fire(new MaintenanceModeEnabled($payload['time'], $payload['message'], $payload['view'], $payload['retry'], $payload['allowed']));
+        Event::dispatch(new MaintenanceModeEnabled($payload['time'], $payload['message'], $payload['view'], $payload['retry'], $payload['allowed']));
         return true;
     }
 
