@@ -2,7 +2,8 @@
 
 namespace SampleApp\Exemptions;
 
-use Auth, Config;
+use Auth;
+use Config;
 
 use MisterPhilip\MaintenanceMode\Exemptions\MaintenanceModeExemption;
 
@@ -33,15 +34,13 @@ class UserGroupWhitelist extends MaintenanceModeExemption
 
         $exemptGroups = $this->app['config']->get('maintenancemode.exemptions.user-groups', []);
         $currentUser = $this->app['auth']->user();
-        if(is_array($exemptGroups) && $currentUser !== null)
-        {
+        if (is_array($exemptGroups) && $currentUser !== null) {
             // Grab the current user group IDs
             $currentUserGroups = $currentUser->groups->modelKeys();
 
             // Check to see if the user is within this group
-            if((is_array($currentUserGroups) && count(array_intersect($currentUserGroups, $exemptGroups))) ||
-                !is_array($currentUserGroups) && in_array($currentUserGroups, $exemptGroups))
-            {
+            if ((is_array($currentUserGroups) && count(array_intersect($currentUserGroups, $exemptGroups))) ||
+                !is_array($currentUserGroups) && in_array($currentUserGroups, $exemptGroups)) {
                 // The user matched the whitelist, they will NOT see the maintenance page
                 return true;
             }

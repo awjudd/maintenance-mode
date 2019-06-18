@@ -2,4 +2,6 @@
 
 namespace MisterPhilip\MaintenanceMode\Events;
 
-class MaintenanceModeDisabled extends MaintenanceModeChanged { }
+class MaintenanceModeDisabled extends MaintenanceModeChanged
+{
+}

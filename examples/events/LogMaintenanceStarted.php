@@ -15,8 +15,7 @@ class LogMaintenanceStarted
     public function handle(MaintenanceModeEnabled $maintenanceMode)
     {
         $logMessage = "Maintenance Mode Enabled";
-        if(!is_null($maintenanceMode->message) && $maintenanceMode->message !== "")
-        {
+        if (!is_null($maintenanceMode->message) && $maintenanceMode->message !== "") {
             $logMessage .= " with a custom message: \"" . $maintenanceMode->message . "\"";
         }
         Log::alert($logMessage);
