@@ -11,4 +11,6 @@ use Exception;
  *
  * @package MisterPhilip\MaintenanceMode
  */
-class ExemptionDoesNotExist extends Exception { }
+class ExemptionDoesNotExist extends Exception
+{
+}

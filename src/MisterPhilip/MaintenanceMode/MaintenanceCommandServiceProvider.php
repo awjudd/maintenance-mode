@@ -9,12 +9,12 @@ use MisterPhilip\MaintenanceMode\Console\Commands\StartMaintenanceCommand;
 class MaintenanceCommandServiceProvider extends ServiceProvider
 {
 
-	/**
-	 * Indicates if loading of the provider is deferred.
-	 *
-	 * @var bool
-	 */
-	protected $defer = true;
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = true;
 
     /**
      * Register the service provider.
@@ -23,14 +23,12 @@ class MaintenanceCommandServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('command.down', function($app)
-        {
+        $this->app->singleton('command.down', function ($app) {
             return new StartMaintenanceCommand();
         });
 
 
-        $this->app->singleton('command.up', function($app)
-        {
+        $this->app->singleton('command.up', function ($app) {
             return new EndMaintenanceCommand();
         });
         $this->commands(['command.down', 'command.up']);
