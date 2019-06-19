@@ -70,8 +70,7 @@ class CheckForMaintenanceMode extends LaravelMaintenanceMode
         ];
 
         // Are we down?
-        if($this->app->isDownForMaintenance())
-        {
+        if ($this->app->isDownForMaintenance()) {
             // Yes. :(
             Carbon::setLocale(App::getLocale());
 
@@ -84,30 +83,24 @@ class CheckForMaintenanceMode extends LaravelMaintenanceMode
             // Update the array with data from down file
             $info['Timestamp'] = Carbon::createFromTimestamp($data['time']);
 
-            if(isset($data['message']) && $data['message'])
-            {
+            if (isset($data['message']) && $data['message']) {
                 $info['Message'] = $data['message'];
             }
-            if(isset($data['view']) && $data['view'])
-            {
+            if (isset($data['view']) && $data['view']) {
                 $info['View'] = $data['view'];
             }
-            if(isset($data['retry']) && intval($data['retry'], 10) !== 0)
-            {
+            if (isset($data['retry']) && intval($data['retry'], 10) !== 0) {
                 $info['Retry'] = intval($data['retry'], 10);
             }
 
             // Inject the information into the views before the exception
             $this->injectIntoViews($info);
 
-            if(!$this->isExempt($data, $request))
-            {
+            if (!$this->isExempt($data, $request)) {
                 // The user isn't exempt, so show them the error page
-                throw new MaintenanceModeException($data['time'], $data['retry'], $data['message'],  $data['view']);
+                throw new MaintenanceModeException($data['time'], $data['retry'], $data['message'], $data['view']);
             }
-        }
-        else
-        {
+        } else {
             // Inject the default information into the views
             $this->injectIntoViews($info);
         }
@@ -123,11 +116,9 @@ class CheckForMaintenanceMode extends LaravelMaintenanceMode
      */
     protected function injectIntoViews($info)
     {
-        if($this->inject)
-        {
+        if ($this->inject) {
             // Inject the information globally (to prevent the need of isset)
-            foreach($info as $key => $value)
-            {
+            foreach ($info as $key => $value) {
                 $this->app['view']->share($this->prefix . $key, $value);
             }
         }
@@ -147,27 +138,19 @@ class CheckForMaintenanceMode extends LaravelMaintenanceMode
     {
         // Grab all of the exemption classes to create/execute against
         $exemptions = $this->app['config']->get('maintenancemode.exemptions', []);
-        foreach($exemptions as $className)
-        {
-            if(class_exists($className))
-            {
+        foreach ($exemptions as $className) {
+            if (class_exists($className)) {
                 $exemption = new $className($this->app);
-                if($exemption instanceof MaintenanceModeExemption)
-                {
+                if ($exemption instanceof MaintenanceModeExemption) {
                     // Run the exemption check
-                    if($exemption->isExempt())
-                    {
+                    if ($exemption->isExempt()) {
                         return true;
                     }
-                }
-                else
-                {
+                } else {
                     // Class doesn't match what we're looking for
                     throw new InvalidExemption($this->app['translator']->get($this->language . '.exceptions.invalid', ['class' => $className]));
                 }
-            }
-            else
-            {
+            } else {
                 // Where's Waldo?
                 throw new ExemptionDoesNotExist($this->app['translator']->get($this->language . '.exceptions.missing', ['class' => $className]));
             }

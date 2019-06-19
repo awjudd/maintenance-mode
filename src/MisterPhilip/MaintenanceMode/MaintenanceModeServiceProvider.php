@@ -7,37 +7,38 @@ use Illuminate\Support\ServiceProvider;
 class MaintenanceModeServiceProvider extends ServiceProvider
 {
 
-	/**
-	 * Indicates if loading of the provider is deferred.
-	 *
-	 * @var bool
-	 */
-	protected $defer = false;
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = false;
 
     /**
      * Bootstrap our application events.
      *
      * @return void
      */
-	public function boot()
-	{
+    public function boot()
+    {
         // Register our resources
         $this->loadViews();
         $this->loadTranslations();
-		$this->loadConfig();
-	}
+        $this->loadConfig();
+    }
 
-	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
         $this->mergeConfigFrom(
-            $this->getRelativePath('config/maintenancemode.php'), 'maintenancemode'
+            $this->getRelativePath('config/maintenancemode.php'),
+            'maintenancemode'
         );
-	}
+    }
 
     /**
      * Register our view files

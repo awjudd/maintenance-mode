@@ -2,7 +2,8 @@
 
 namespace MisterPhilip\MaintenanceMode\Console\Commands;
 
-use File, Event;
+use File;
+use Event;
 use Illuminate\Foundation\Console\DownCommand;
 use MisterPhilip\MaintenanceMode\Events\MaintenanceModeEnabled;
 
@@ -37,8 +38,7 @@ class StartMaintenanceCommand extends DownCommand
      */
     public function handle()
     {
-        if(!$this->verifyViewExists($this->option('view')))
-        {
+        if (!$this->verifyViewExists($this->option('view'))) {
             $message  = "Aborting due to missing view. Your application will remain ";
             $message .= (file_exists($this->laravel->storagePath().'/framework/down')) ? "down from a previous down command." : "up.";
             $this->info($message);
@@ -65,7 +65,7 @@ class StartMaintenanceCommand extends DownCommand
         $data = parent::getDownFilePayload();
         $data['view'] = $this->option('view');
 
-        if(!isset($data['allowed'])) {
+        if (!isset($data['allowed'])) {
             $data['allowed'] =  $this->option('allow');
         }
         return $data;
@@ -80,8 +80,7 @@ class StartMaintenanceCommand extends DownCommand
     protected function verifyViewExists($view)
     {
         // Verify the user passed us a correct view
-        if($view && !$this->laravel->view->exists($view))
-        {
+        if ($view && !$this->laravel->view->exists($view)) {
             $this->laravel->config->get("maintenancemode.view");
             $this->error("The view \"{$view}\" does not exist. If you continue, the view from the configuration file \"{$this->laravel->config->get("maintenancemode.view")}\" will be used until \"{$view}\" is found.");
             return $this->confirm('Do you wish to continue? [y|N]');

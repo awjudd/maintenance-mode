@@ -2,7 +2,8 @@
 
 namespace MisterPhilip\MaintenanceMode\Exemptions;
 
-use Config, Request;
+use Config;
+use Request;
 
 /**
  * Class IPWhitelist
@@ -24,8 +25,7 @@ class IPWhitelist extends MaintenanceModeExemption
         $useProxy = $this->app['config']->get('maintenancemode.exempt-ips-proxy', false);
         $userIP = $this->app['request']->getClientIp($useProxy);
 
-        if(is_array($authorizedIPs) && in_array($userIP, $authorizedIPs))
-        {
+        if (is_array($authorizedIPs) && in_array($userIP, $authorizedIPs)) {
             return true;
         }
 

@@ -11,4 +11,6 @@ use Exception;
  *
  * @package MisterPhilip\MaintenanceMode
  */
-class InvalidExemption extends Exception { }
+class InvalidExemption extends Exception
+{
+}
