@@ -5,7 +5,7 @@ This package is a drop-in replacement for Laravel's maintenance mode. The follow
 * Laravel 5.0 - 5.2, please use the [1.0 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.0). 
 * There are currently no plans to support Laravel 5.3 - 5.4. 
 * Laravel 5.5 - 5.8, please use the [1.3 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.3)
-* Laravel 6.0, please use the [2.0 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.3). Note that 5.5+ 
+* Laravel 6.0, please use the [2.0 branch](https://github.com/MisterPhilip/maintenance-mode/tree/2.0). Note that 5.5+ 
 _can_ work with the 2.0 branch, but it is not guaranteed to be backwards compatible. 
 
 
