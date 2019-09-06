@@ -1,9 +1,15 @@
-# Enhanced Laravel 5 Maintenance Mode
+# Enhanced Laravel Maintenance Mode
 
-This package is a drop-in replacement for Laravel 5.5 - 5.8's maintenance mode. For Laravel 5.0 - 5.2, please use the
-[1.0 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.0). For Laravel 5.3 - 5.4, support _might_ be released
-on the [1.1 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.1) branch, should there be any interest /
-development help. Features include:
+This package is a drop-in replacement for Laravel's maintenance mode. The following versions are supported: 
+
+* Laravel 5.0 - 5.2, please use the [1.0 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.0). 
+* There are currently no plans to support Laravel 5.3 - 5.4. 
+* Laravel 5.5 - 5.8, please use the [1.3 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.3)
+* Laravel 6.0, please use the [2.0 branch](https://github.com/MisterPhilip/maintenance-mode/tree/1.3). Note that 5.5+ 
+_can_ work with the 2.0 branch, but it is not guaranteed to be backwards compatible. 
+
+
+Features include:
  - Allowing custom maintenance messages to be shown to users
  - Including a timestamp of when the application went down
  - Exempting select users via custom exemption classes
@@ -32,13 +38,13 @@ development help. Features include:
 
 Run the following command to install the latest:
 ```bash
-$ composer require "misterphilip/maintenance-mode=1.3.*"
+$ composer require "misterphilip/maintenance-mode:~2.0"
 ```
 
 Or, if you prefer installing it manually, within `composer.json` add the following line to the end of the `require` section:
 
 ```json
-"misterphilip/maintenance-mode": "1.3.*"
+"misterphilip/maintenance-mode": "~2.0"
 ```
 
 And then run the Composer install command:

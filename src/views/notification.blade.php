@@ -37,7 +37,7 @@
         {{-- Show the truncated message (so it doesn't overflow) --}}
         @if(isset(${Config::get('maintenancemode.inject.prefix').'Message'}))
             <span title="{{ ${Config::get('maintenancemode.inject.prefix').'Message'} }}">
-                {{ str_limit(${Config::get('maintenancemode.inject.prefix').'Message'}, 100, "&hellip;") }}
+                {{ Str::limit(${Config::get('maintenancemode.inject.prefix').'Message'}, 100, "&hellip;") }}
             </span>
         @endif
 
